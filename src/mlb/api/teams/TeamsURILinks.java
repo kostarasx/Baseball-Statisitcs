@@ -1,6 +1,8 @@
-package MLB.API;
+package mlb.api.teams;
 
 import java.util.Calendar;
+
+import mlb.api.Request;
 
 /*
  * A class for Mlb Teams URI LINKS
@@ -24,7 +26,8 @@ public class TeamsURILinks {
 	private String sort_order;
 	private String seasonParam = "season=";
 	private String season;
-	private String delim = "&";
+	private String inParam = "col_in=";
+	private String delim ="&";
 	private String del ="'";
 	
 	public TeamsURILinks() {
@@ -32,25 +35,39 @@ public class TeamsURILinks {
 		sort_order = "";
 		int year = Calendar.getInstance().get(Calendar.YEAR); // Get Current Year
 		season = Integer.toString(year); // Default icurrent year
+		
 	}
 	
 	
-	public String requestLink(String all_star_sw, String sort_order, String season) {
+	/*
+	 * Flag = 0 None
+	 * Flag = 1 Include  Team Name Team League Team id
+	 * Flag = 2 exclude
+	 */
+	public String requestURL(String all_star_sw, String sort_order, String season, int flag) {
 		String param1 = "";
 		String param2 = "";
 		String param3;
+		String param4 = "";
 		if (all_star_sw != "") {
-			this.all_star_sw = del + all_star_sw + del;
-			param1 = delim + this.all_star_sw;
+			this.all_star_sw = Request.addDel(all_star_sw);
+			param1 = delim + allStarParam + this.all_star_sw;
 		}
 		if (sort_order != "") {
-			this.sort_order = del + this.sort_order + del;
-			param2 = delim + this.sort_order;
+			this.sort_order = Request.addDel(sort_order);
+			param2 = delim + sortParam + this.sort_order;
 		}
-		this.season = del + season + del;
-		param3 = delim + this.season;
-		String Link = host + path + param1 + param2 + param3;
+		if (flag == 1) {
+			param4 = Request.in_exParam(path);
+			String temp = delim + param4 + inParam;
+			param4 = temp + "name_display_full" + temp + "league" + temp + "team_id";
+		}
+		this.season = Request.addDel(season);
+		param3 = delim + seasonParam + this.season;
+		String Link = host + path + param1 + param2 + param3 + param4;
 		return Link;
 	}
+	
+
 	
 }
