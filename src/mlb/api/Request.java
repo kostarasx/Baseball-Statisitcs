@@ -31,16 +31,4 @@ public class Request {
 		return response;
 	}
 	
-	
-	public static String addDel (String text) {
-		text = "'" + text + "'";
-		return text;
-	}
-	
-	public static String in_exParam(String path) {
-		int first = path.indexOf('.');
-		int second = path.indexOf('.', first);
-		return path.substring(first, second);
-	}
-	
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.json.JSONException;
 
+import menu.select_team.SelectTeamMenu;
+
 public class MainMenu extends Menu {
 
 	public static void show() throws IOException, JSONException {
@@ -17,18 +19,22 @@ public class MainMenu extends Menu {
 		System.out.println(j + "." + "Standings");
 		j++;
 		System.out.println(j + "." + "Schedule");
-		j++;
-		System.out.println(j + "." + "Exit");
+		System.out.println(0 + "." + "Exit");
 		int choice = getUserInput(0, j);
 		clearConcolse();
 		switch (choice) {
+		case 0:
+			exitProgramm();
+			break;
 		case 1:
-			selectTeamMenu.show();
+			SelectTeamMenu.show();
 			break;
 		case 2:
 			System.out.println("TODO");
 		}
 	}
+	
+	
 
 	
 }

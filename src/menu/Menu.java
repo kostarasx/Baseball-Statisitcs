@@ -43,6 +43,13 @@ public class Menu {
 		} while (check);
 		return choice;
 	}
+	
+	public  static void gap(String text, int a) {
+		int b = text.length();
+		for(int i = b; i <= a; i++) {
+			System.out.print(" ");
+		}
+	}
 
 	public static  void clearConcolse() {
 		try
@@ -63,6 +70,10 @@ public class Menu {
 			//  Handle any exceptions.
 		}
 
+	}
+	
+	public static void exitProgramm() {
+		System.exit(0);
 	}
 
 }
