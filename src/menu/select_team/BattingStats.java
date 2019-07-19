@@ -12,105 +12,93 @@ import mlb.api.teams.TeamsRequests;
 
 public class BattingStats extends Menu {
 
-	private static int k = 1;
-	
-	public static void show(TeamsRequests team) throws IOException, JSONException {
-		clearConcolse();
-		System.out.println("\t\t\t Batting Stats\n");
-		int a = 25;
-		String text = "Name";
-		System.out.print(text + " ");
-		gap(text, a);
-		a = 3;
-		text = "Pos";
-		System.out.print(text + " ");
-		gap(text, a);
-		a = 3;
-		text = "G";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "AB";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "R";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "H";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "2B";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "3B";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "HR";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "RBI";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "BB";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "IBB";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "SO";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "SB";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = "CS";
-		System.out.print(text + " ");
-		gap(text, a);
-		a = 5;
-		text = " AVG";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = " OBP";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = " SLG";
-		System.out.print(text + " ");
-		gap(text, a);
-		text = " OPS";
-		System.out.print(text + " ");
-		gap(text, a);
-		System.out.println("\n==================================================================================================================================");
-		int pos = 1;
-		int j = 0;
-		pos = pritnPlayersStats(team.getFirstBasePlayers(), team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getSecondBasePlayers(), team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getThirdBasePlayers(), team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getCatcherPlayers(),team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getShortStopPlayers(), team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getLeftFieldPlayers(), team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getCenterFieldPlayers(), team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getRightFieldPlayers(), team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getDesignHitterPlayers(),team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getOfPlayers(),team.getNumberInPotition(j), pos);
-		j++;
-		pos = pritnPlayersStats(team.getPitcherPlayers(),team.getNumberInPotition(j), pos);
-		
+	private static int k;
+
+	public BattingStats() {
 	}
-	
-	private static int pritnPlayersStats(String[][] array, int playersInPosition, int pos) throws IOException, JSONException {
+
+	public static boolean show(TeamsRequests team, String name) throws IOException, JSONException {
+		do {
+			textGap = "========================================================================================================================================";
+			k = 1;
+			clearConcolse();
+			System.out.println("\t\t\t\t Batting Stats\n");
+			System.out.println(name);
+			int a = 25;
+			printInfo("Name", a);
+			a = 3;
+			printInfo("Pos", a);
+			printInfo("G", a);
+			printInfo("AB", a);
+			printInfo("R", a);
+			printInfo("H", a);
+			printInfo("2B", a);
+			printInfo("3B", a);
+			printInfo("HR", a);
+			printInfo("RBI", a);
+			printInfo("BB", a);
+			printInfo("IBB", a);
+			printInfo("SO", a);
+			printInfo("SB", a);
+			printInfo("CS", a);
+			printInfo("SF", a);
+			printInfo("HBP", a);
+			a = 5;
+			printInfo("AVG", a);
+			printInfo("OBP", a);
+			printInfo("SLG", a);
+			printInfo("OPS", a);
+			System.out.println("\n" + textGap);
+			int pos = 1;
+			int j = 0;
+			pos = pritnPlayersStats(team.getFirstBasePlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getSecondBasePlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getThirdBasePlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getCatcherPlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getShortStopPlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getLeftFieldPlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getCenterFieldPlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getRightFieldPlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getDesignHitterPlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getOfPlayers(), team.getNumberInPotition(j), pos);
+			j++;
+			pos = pritnPlayersStats(team.getPitcherPlayers(), team.getNumberInPotition(j), pos);
+			System.out.println(textGap);
+			System.out.println((team.getTeamSize() + 1) + "." + "Back");
+			System.out.println(0 + "." + "Exit");
+			int choice = getUserInput(0, team.getTeamSize() + 1);
+			if (choice == 0) {
+				exitProgramm();
+			} else if (choice == team.getTeamSize() + 1) {
+				return true;
+			} else {
+				StatsRequest stats = null;
+				stats = new StatsRequest();
+				stats.playerCareerStats(team);
+				String[][] roster = stats.getRoster();
+				check = PlayerCareerBatingStats.show(roster[choice - 1][0], roster[choice - 1][1], stats);
+			}
+		} while (check);
+		return true;
+
+	}
+
+	private static int pritnPlayersStats(String[][] array, int playersInPosition, int pos)
+			throws IOException, JSONException {
 		StatsRequest stats = null;
 		stats = new StatsRequest();
 		int year = Calendar.getInstance().get(Calendar.YEAR); // Get Current Year
 		String season = Integer.toString(year); // Default icurrent year
-		String position = "" ;
+		String position = "";
 		switch (pos) {
 		case 1:
 			position = "1Β";
@@ -147,34 +135,25 @@ public class BattingStats extends Menu {
 			pos = 12;
 			break;
 		}
-		for(int i = 0; i < playersInPosition; i++) {
-			String name = array [i][0];
-			String player_id = null;
-			player_id = array [i][1];
-			stats.getStatsromAPI("R", season, player_id, 0);
-			stats.storeStats();
-			if ( pos == 12) {
-				System.out.println("==================================================================================================================================");
+		for (int i = 0; i < playersInPosition; i++) {
+			String name = array[i][0];
+			String player_id = array[i][1];
+			stats.getStatsromAPI("R", season, player_id, 1);
+			stats.storeStats(false, 0);
+			if (pos == 12) {
+				System.out.println(textGap);
 				pos = 11;
 			}
 			int a = 25;
-			String text = Integer.toString(k) + "." + name;
-			System.out.print(text + " ");
-			gap(text, a);
-			text = position;
+			printInfo(Integer.toString(k) + "." + name, a);
 			a = 3;
-			System.out.print(text + " ");
-			gap(text, a);
+			printInfo(position, a);
 			String[] hittingStats = stats.getStats();
-			a = 3;
 			for (int j = 0; j < GeneralInfo.battingStats; j++) {
-				text = hittingStats[j];
-				System.out.print(text + " ");
-				gap(text, a);
-				if ( j == 12) {
+				printInfo(hittingStats[j], a);
+				if (j == 14) {
 					a = 5;
 				}
-				
 			}
 			k++;
 			System.out.println();
@@ -182,5 +161,4 @@ public class BattingStats extends Menu {
 		pos++;
 		return pos;
 	}
-
 }

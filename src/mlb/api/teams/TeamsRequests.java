@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import mlb.GeneralInfo;
 import mlb.api.Request;
 
-public class TeamsRequests {
+public class TeamsRequests extends Request {
 
 	private String[] alTeams;
 	private String[] nlTeams;
@@ -26,12 +26,11 @@ public class TeamsRequests {
 	private String[][] pitcherPlayers;
 	private String[][] designHitterPlayers;
 	private String[][] ofPlayers;
-	private int [] numberInPotition;
+	private int[] numberInPotition;
 	private StringBuffer response;
 	private TeamsURILinks teamURI;
 
-
-	public  TeamsRequests() {
+	public TeamsRequests() {
 		teamURI = new TeamsURILinks();
 		alTeams = new String[GeneralInfo.numberOfALTeams];
 		nlTeams = new String[GeneralInfo.numberOfNLTeams];
@@ -58,10 +57,10 @@ public class TeamsRequests {
 		rightFieldPlayers = new String[GeneralInfo.maxPlayers / 5][GeneralInfo.maxPlayers / 5];
 		catcherPlayers = new String[GeneralInfo.maxPlayers / 5][GeneralInfo.maxPlayers / 5];
 		pitcherPlayers = new String[GeneralInfo.maxPlayers][GeneralInfo.maxPlayers];
-		designHitterPlayers = new String[GeneralInfo.maxPlayers/ 10][GeneralInfo.maxPlayers/ 10];
-		ofPlayers = new String[GeneralInfo.maxPlayers/ 10][GeneralInfo.maxPlayers/ 10];
+		designHitterPlayers = new String[GeneralInfo.maxPlayers / 10][GeneralInfo.maxPlayers / 10];
+		ofPlayers = new String[GeneralInfo.maxPlayers / 10][GeneralInfo.maxPlayers / 10];
 	}
-	
+
 	public String[] getAlTeams() {
 		return alTeams;
 	}
@@ -77,7 +76,7 @@ public class TeamsRequests {
 	public String getNlTeamId(int index) {
 		return nlTeamsId[index];
 	}
-	
+
 	public int getTeamSize() {
 		return teamSize;
 	}
@@ -117,7 +116,7 @@ public class TeamsRequests {
 	public String[][] getPitcherPlayers() {
 		return pitcherPlayers;
 	}
-	
+
 	public String[][] getDesignHitterPlayers() {
 		return designHitterPlayers;
 	}
@@ -130,11 +129,9 @@ public class TeamsRequests {
 		return numberInPotition[index];
 	}
 
-
-
 	public void getTeamsFromAPI(String all_star_sw, String sort_order, String season, int flag) throws IOException {
 		String url = teamURI.requesTeamURL(all_star_sw, sort_order, season, flag);
-		response = Request.requestDataFromMLB(url);
+		response = requestDataFromMLB(url);
 	}
 
 	// Seperate Teams base of Division AL or NL
@@ -144,7 +141,8 @@ public class TeamsRequests {
 		JSONObject myResponse = new JSONObject(response.toString());
 		JSONObject res;
 		for (int i = 0; i < GeneralInfo.number0fTeams; i++) {
-			res = myResponse.getJSONObject("team_all_season").getJSONObject("queryResults").getJSONArray("row").getJSONObject(i);
+			res = myResponse.getJSONObject("team_all_season").getJSONObject("queryResults").getJSONArray("row")
+					.getJSONObject(i);
 			String league = res.getString("league");
 			String name = res.getString("name_display_full");
 			String teamId = res.getString("team_id");
@@ -152,8 +150,7 @@ public class TeamsRequests {
 				alTeams[alIndex] = name;
 				alTeamsId[alIndex] = teamId;
 				alIndex++;
-			}
-			else if (league.equals("NL")) {
+			} else if (league.equals("NL")) {
 				nlTeams[nlIndex] = name;
 				nlTeamsId[nlIndex] = teamId;
 				nlIndex++;
@@ -163,7 +160,7 @@ public class TeamsRequests {
 
 	public void getRosterFromAPI(String team_id) throws IOException {
 		String url = teamURI.requestRosterURI(team_id, 1);
-		response = Request.requestDataFromMLB(url);
+		response = requestDataFromMLB(url);
 	}
 
 	public void seperatePlayers() throws JSONException {
@@ -173,8 +170,9 @@ public class TeamsRequests {
 		res = myResponse.getJSONObject("roster_40").getJSONObject("queryResults");
 		String size = res.getString("totalSize");
 		teamSize = Integer.parseInt(size);
-		for (int i = 0; i < teamSize; i++ ) {
-			res = myResponse.getJSONObject("roster_40").getJSONObject("queryResults").getJSONArray("row").getJSONObject(i);
+		for (int i = 0; i < teamSize; i++) {
+			res = myResponse.getJSONObject("roster_40").getJSONObject("queryResults").getJSONArray("row")
+					.getJSONObject(i);
 			String potition = res.getString("position_txt");
 			String name = res.getString("name_display_first_last");
 			String playerId = res.getString("player_id");
@@ -256,8 +254,8 @@ public class TeamsRequests {
 				temp++;
 				numberInPotition[10] = temp;
 				break;
-			default: 
-                System.out.println("no match");
+			default:
+				System.out.println("no match");
 			}
 		}
 	}

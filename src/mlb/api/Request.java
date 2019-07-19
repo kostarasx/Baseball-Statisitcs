@@ -7,11 +7,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Request {
-	
+
 	/*
-	 * Request data from MLB API base of url 
+	 * Request data from MLB API base of url
 	 */
-	public static StringBuffer requestDataFromMLB(String url) throws IOException {
+	protected StringBuffer requestDataFromMLB(String url) throws IOException {
 		StringBuffer response = new StringBuffer();
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -20,15 +20,14 @@ public class Request {
 		if (responseCode == HttpURLConnection.HTTP_OK) {
 			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine = null;
-			while ((inputLine = in.readLine()) !=null) {
+			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
 			}
-		}
-		else {
+		} else {
 			System.out.println("Error getting data!");
 			response = null;
 		}
 		return response;
 	}
-	
+
 }
