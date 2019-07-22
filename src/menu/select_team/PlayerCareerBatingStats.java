@@ -15,57 +15,57 @@ public class PlayerCareerBatingStats extends Menu {
 		do {
 			clearConcolse();
 			textGap = "\n======================================================================================================================";
-			int a;
+			int gap;
 			stats.getInfoFromApi(player_id, 1);
 			String[] info = stats.getPlayerInfo();
-			a = 15;
-			printPlayerInfo("Name:", name, a);
+			gap = 15;
+			printPlayerInfo("Name:", name, gap);
 			int i = 0;
-			printPlayerInfo("Country:", info[i], a);
+			printPlayerInfo("Country:", info[i], gap);
 			i++;
-			printPlayerInfo("Birth Date:", info[i], a);
+			printPlayerInfo("Birth Date:", info[i], gap);
 			i++;
-			printPlayerInfo("Age:", info[i], a);
+			printPlayerInfo("Age:", info[i], gap);
 			i++;
-			printPlayerInfo("Height:", info[i], a);
+			printPlayerInfo("Height:", info[i], gap);
 			i++;
-			printPlayerInfo("Weight:", info[i], a);
+			printPlayerInfo("Weight:", info[i], gap);
 			i++;
-			printPlayerInfo("Position:", info[i], a);
+			printPlayerInfo("Position:", info[i], gap);
 			i++;
-			printPlayerInfo("Throws:", info[i], a);
+			printPlayerInfo("Throws:", info[i], gap);
 			i++;
-			printPlayerInfo("Bats:", info[i], a);
+			printPlayerInfo("Bats:", info[i], gap);
 			i++;
-			printPlayerInfo("Pro Debute:", info[i], a);
+			printPlayerInfo("Pro Debute:", info[i], gap);
 			i++;
-			printPlayerInfo("Retire:", info[i], a);
+			printPlayerInfo("Retire:", info[i], gap);
 			System.out.println("\n");
 			System.out.println("\t\t\t\t Career Bating Stats\n");
-			a = 5;
-			printInfo("Year", a);
-			printInfo("Team", a);
-			a = 3;
-			printInfo("G", a);
-			printInfo("AB", a);
-			printInfo("R", a);
-			printInfo("H", a);
-			printInfo("2B", a);
-			printInfo("3B", a);
-			printInfo("HR", a);
-			printInfo("RBI", a);
-			printInfo("BB", a);
-			printInfo("IBB", a);
-			printInfo("SO", a);
-			printInfo("SB", a);
-			printInfo("CS", a);
-			printInfo("SF", a);
-			printInfo("HBP", a);
-			a = 5;
-			printInfo("AVG", a);
-			printInfo("OBP", a);
-			printInfo("SLG", a);
-			printInfo("OPS", a);
+			gap = 5;
+			printInfo("Year", gap);
+			printInfo("Team", gap);
+			gap = 3;
+			printInfo("G", gap);
+			printInfo("AB", gap);
+			printInfo("R", gap);
+			printInfo("H", gap);
+			printInfo("2B", gap);
+			printInfo("3B", gap);
+			printInfo("HR", gap);
+			printInfo("RBI", gap);
+			printInfo("BB", gap);
+			printInfo("IBB", gap);
+			printInfo("SO", gap);
+			printInfo("SB", gap);
+			printInfo("CS", gap);
+			printInfo("SF", gap);
+			printInfo("HBP", gap);
+			gap = 5;
+			printInfo("AVG", gap);
+			printInfo("OBP", gap);
+			printInfo("SLG", gap);
+			printInfo("OPS", gap);
 			System.out.println(textGap);
 			printPlayerCarrerHittingStats(stats, player_id);
 			System.out.println(1 + "." + "Back");
@@ -80,12 +80,6 @@ public class PlayerCareerBatingStats extends Menu {
 		return true;
 	}
 
-	private static void printPlayerInfo(String info, String playerInfo, int a) {
-		System.out.print(info);
-		gap(info, a);
-		System.out.println(playerInfo);
-	}
-
 	private static void printPlayerCarrerHittingStats(StatsRequest stats, String player_id)
 			throws IOException, JSONException {
 		int debut = stats.getDebutYear();
@@ -96,13 +90,13 @@ public class PlayerCareerBatingStats extends Menu {
 			System.out.println("\t\t\t\tNo proffesional games");
 			season = -1;
 		}
-		int a;
+		int gap;
 		int counter = -1;
 		boolean flag = false;
 		for (int i = debut; i <= season; i++) {
 			String year = Integer.toString(i);
-			stats.getStatsromAPI("R", year, player_id, 2);
-			stats.storeStats(flag, counter);
+			stats.getBattingStatsromAPI("R", year, player_id, 2);
+			stats.storeBattingStats(flag, counter);
 			if (stats.getTeamsPlayed() > 1) {
 				counter++;
 				i--;
@@ -113,29 +107,29 @@ public class PlayerCareerBatingStats extends Menu {
 				flag = false;
 				i++;
 			}
-			a = 5;
-			printInfo(year, a);
-			printInfo(stats.getTeam(), a);
-			a = 3;
+			gap = 5;
+			printInfo(year, gap);
+			printInfo(stats.getTeam(), gap);
+			gap = 3;
 			String[] hittingStats = stats.getStats();
 			for (int j = 0; j < GeneralInfo.battingStats; j++) {
-				printInfo(hittingStats[j], a);
+				printInfo(hittingStats[j], gap);
 				if (j == 14) {
-					a = 5;
+					gap = 5;
 				}
 			}
 			System.out.println(textGap);
 		}
 		stats.getCarrertHittingStatsFromAPI("R", player_id, 1);
-		stats.storeCareerStats();
+		stats.storeHittingCareerStats();
 		String[] careerStats = stats.getStats();
-		a = 12;
-		printInfo("Career Total", a);
-		a = 3;
+		gap = 12;
+		printInfo("Career Total", gap);
+		gap = 3;
 		for (int j = 0; j < GeneralInfo.battingStats; j++) {
-			printInfo(careerStats[j], a);
+			printInfo(careerStats[j], gap);
 			if (j == 14) {
-				a = 5;
+				gap = 5;
 			}
 		}
 		System.out.println(textGap);

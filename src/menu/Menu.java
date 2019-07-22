@@ -12,7 +12,7 @@ public class Menu {
 		int choice;
 		boolean check;
 		do {
-			choice = checkIfInt();// check if innpu has int
+			choice = checkIfInt();// check if innpt has int
 			check = checIfRightValue(choice, minChoice, maxChoice);// check input right values
 		} while (check);
 		return choice;
@@ -44,14 +44,20 @@ public class Menu {
 		return check;
 	}
 
-	protected static void printInfo(String text, int a) {
-		System.out.print(text + " ");
-		gap(text, a);
+	protected static void printPlayerInfo(String info, String playerInfo, int a) {
+		System.out.print(info);
+		gap(info, a);
+		System.out.println(playerInfo);
 	}
 
-	protected static void gap(String text, int a) {
-		int b = text.length();
-		for (int i = b; i <= a; i++) {
+	protected static void printInfo(String text, int gap) {
+		System.out.print(text + " ");
+		gap(text, gap);
+	}
+
+	protected static void gap(String text, int gap) {
+		int textSize = text.length();
+		for (int i = textSize; i <= gap; i++) {
 			System.out.print(" ");
 		}
 	}

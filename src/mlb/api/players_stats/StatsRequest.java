@@ -11,7 +11,7 @@ import mlb.api.teams.TeamsRequests;
 
 public class StatsRequest extends Request {
 
-	private String[] stats;
+	private String[] battingStats;
 	private StringBuffer response;
 	private PlayerStatsURI playerStats;
 	private String[][] roster;
@@ -24,18 +24,20 @@ public class StatsRequest extends Request {
 
 	public StatsRequest() {
 		playerStats = new PlayerStatsURI();
-		stats = new String[GeneralInfo.battingStats];
 		response = null;
 		roster = null;
 		size = 0;
 		debutYear = 0;
 		endYear = 0;
 		flag = 0;
+		teamsPlayed = 0;
 		team = "";
 	}
 
+	// Getters
+
 	public String[] getStats() {
-		return stats;
+		return battingStats;
 	}
 
 	public String[][] getRoster() {
@@ -58,82 +60,9 @@ public class StatsRequest extends Request {
 		return teamsPlayed;
 	}
 
-	public void getStatsromAPI(String game_type, String season, String player_id, int flag) throws IOException {
-		String url = playerStats.requestBattingStatsURL(game_type, season, player_id, flag);
-		response = requestDataFromMLB(url);
-		if (flag == 2) {
-			this.flag = flag;
-		}
-	}
+	// Create an array with full forster
 
-	public void getCarrertHittingStatsFromAPI(String game_type, String player_id, int flag) throws IOException {
-		String url = playerStats.requestCareerStatsURL(game_type, player_id, flag);
-		response = requestDataFromMLB(url);
-	}
-
-	public void storeStats(boolean flag2, int index) throws JSONException {
-		JSONObject myResponse = new JSONObject(response.toString());
-		JSONObject res = null;
-		try {
-			res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults");
-			teamsPlayed = Integer.parseInt(res.getString("totalSize"));
-			if (teamsPlayed <= 1 && flag2 == false) {
-				res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONObject("row");
-				createStatsArray(res);
-			} else if (flag2 == false) {
-				int temp[] = new int[GeneralInfo.battingStats];
-				for (int j = 0; j < teamsPlayed; j++) {
-					res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONArray("row")
-							.getJSONObject(j);
-					createStatsArray(res);
-					for (int i = 0; i < GeneralInfo.battingStats - 4; i++) {
-						temp[i] = temp[i] + Integer.parseInt(stats[i]);
-					}
-				}
-				float avg = (float) temp[3] / temp[1];// avg = H/AB
-				float obp = (float) (temp[3] + temp[8] + temp[14]) / (temp[1] + temp[8] + temp[13]);// obp=(H+BB+HBP)/(AB+BB+SF)
-				float slg = (float) ((temp[3] - temp[4] - temp[5] - temp[6]) + 2 * temp[4] + 3 * temp[5] + 4 * temp[6])
-						/ temp[1];// slg=(1B+2*D+3*T+4*HR)/AB
-				float ops = obp + slg;
-				for (int i = 0; i < GeneralInfo.battingStats; i++) {
-					stats[i] = Integer.toString(temp[i]);
-				}
-				stats[GeneralInfo.battingStats - 4] = findPercentage(avg);
-				stats[GeneralInfo.battingStats - 3] = findPercentage(obp);
-				stats[GeneralInfo.battingStats - 2] = findPercentage(slg);
-				stats[GeneralInfo.battingStats - 1] = findPercentage(ops);
-			} else if (flag2) {
-				res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONArray("row")
-						.getJSONObject(index);
-				createStatsArray(res);
-			}
-			if (flag == 2) {
-				team = res.getString("team_abbrev");
-				flag = 0;
-			}
-		} catch (JSONException e) {
-			for (int i = 0; i < GeneralInfo.battingStats; i++) {
-				stats[i] = "-";
-			}
-
-		}
-	}
-
-	public void storeCareerStats() throws JSONException {
-		JSONObject myResponse = new JSONObject(response.toString());
-		JSONObject res = null;
-		try {
-			res = myResponse.getJSONObject("sport_career_hitting").getJSONObject("queryResults").getJSONObject("row");
-			createStatsArray(res);
-		} catch (JSONException e) {
-			for (int i = 0; i < GeneralInfo.battingStats; i++) {
-				stats[i] = "-";
-			}
-
-		}
-	}
-
-	public void playerCareerStats(TeamsRequests team) {
+	public void createTeamRoster(TeamsRequests team) {
 		roster = new String[team.getTeamSize()][2];
 		addPlayersToArray(roster, team.getFirstBasePlayers(), team.getNumberInPotition(0));
 		addPlayersToArray(roster, team.getSecondBasePlayers(), team.getNumberInPotition(1));
@@ -156,6 +85,127 @@ public class StatsRequest extends Request {
 			size++;
 		}
 	}
+
+	// Batting Stats
+
+	public void getBattingStatsromAPI(String game_type, String season, String player_id, int flag) throws IOException {
+		String url = playerStats.requestBattingStatsURL(game_type, season, player_id, flag);
+		response = requestDataFromMLB(url);
+		if (flag == 2) {
+			this.flag = flag;
+		}
+	}
+
+	public void getCarrertHittingStatsFromAPI(String game_type, String player_id, int flag) throws IOException {
+		String url = playerStats.requestCareerStatsURL(game_type, player_id, flag);
+		response = requestDataFromMLB(url);
+	}
+
+	public void storeBattingStats(boolean flag2, int index) throws JSONException {
+		battingStats = new String[GeneralInfo.battingStats];
+		JSONObject myResponse = new JSONObject(response.toString());
+		JSONObject res = null;
+		try {
+			res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults");
+			teamsPlayed = Integer.parseInt(res.getString("totalSize"));
+			if (teamsPlayed <= 1 && flag2 == false) {
+				res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONObject("row");
+				createBattingStatsArray(res);
+			} else if (flag2 == false) {
+				int temp[] = new int[GeneralInfo.battingStats];
+				for (int j = 0; j < teamsPlayed; j++) {
+					res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONArray("row")
+							.getJSONObject(j);
+					createBattingStatsArray(res);
+					for (int i = 0; i < GeneralInfo.battingStats - 4; i++) {
+						temp[i] = temp[i] + Integer.parseInt(battingStats[i]);
+					}
+				}
+				float avg = (float) temp[3] / temp[1];// avg = H/AB
+				float obp = (float) (temp[3] + temp[8] + temp[14]) / (temp[1] + temp[8] + temp[13]);// obp=(H+BB+HBP)/(AB+BB+SF)
+				float slg = (float) ((temp[3] - temp[4] - temp[5] - temp[6]) + 2 * temp[4] + 3 * temp[5] + 4 * temp[6])
+						/ temp[1];// slg=(1B+2*D+3*T+4*HR)/AB
+				float ops = obp + slg;
+				for (int i = 0; i < GeneralInfo.battingStats; i++) {
+					battingStats[i] = Integer.toString(temp[i]);
+				}
+				battingStats[GeneralInfo.battingStats - 4] = findPercentage(avg);
+				battingStats[GeneralInfo.battingStats - 3] = findPercentage(obp);
+				battingStats[GeneralInfo.battingStats - 2] = findPercentage(slg);
+				battingStats[GeneralInfo.battingStats - 1] = findPercentage(ops);
+			} else if (flag2) {
+				res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONArray("row")
+						.getJSONObject(index);
+				createBattingStatsArray(res);
+			}
+			if (flag == 2) {
+				team = res.getString("team_abbrev");
+				flag = 0;
+			}
+		} catch (JSONException e) {
+			for (int i = 0; i < GeneralInfo.battingStats; i++) {
+				battingStats[i] = "-";
+			}
+
+		}
+	}
+
+	public void storeHittingCareerStats() throws JSONException {
+		JSONObject myResponse = new JSONObject(response.toString());
+		JSONObject res = null;
+		try {
+			res = myResponse.getJSONObject("sport_career_hitting").getJSONObject("queryResults").getJSONObject("row");
+			createBattingStatsArray(res);
+		} catch (JSONException e) {
+			for (int i = 0; i < GeneralInfo.battingStats; i++) {
+				battingStats[i] = "-";
+			}
+
+		}
+	}
+
+	private void createBattingStatsArray(JSONObject res) throws JSONException {
+		int i = 0;
+		battingStats[i] = res.getString("g");
+		i++;
+		battingStats[i] = res.getString("ab");
+		i++;
+		battingStats[i] = res.getString("r");
+		i++;
+		battingStats[i] = res.getString("h");
+		i++;
+		battingStats[i] = res.getString("d");
+		i++;
+		battingStats[i] = res.getString("t");
+		i++;
+		battingStats[i] = res.getString("hr");
+		i++;
+		battingStats[i] = res.getString("rbi");
+		i++;
+		battingStats[i] = res.getString("bb");
+		i++;
+		battingStats[i] = res.getString("ibb");
+		i++;
+		battingStats[i] = res.getString("so");
+		i++;
+		battingStats[i] = res.getString("sb");
+		i++;
+		battingStats[i] = res.getString("cs");
+		i++;
+		battingStats[i] = res.getString("sf");
+		i++;
+		battingStats[i] = res.getString("hbp");
+		i++;
+		battingStats[i] = res.getString("avg");
+		i++;
+		battingStats[i] = res.getString("obp");
+		i++;
+		battingStats[i] = res.getString("slg");
+		i++;
+		battingStats[i] = res.getString("ops");
+	}
+
+	// Player Info
 
 	public void getInfoFromApi(String player_id, int flag) throws IOException {
 		String url = playerStats.requestInfoURL(player_id, 1);
@@ -202,57 +252,7 @@ public class StatsRequest extends Request {
 		return info;
 	}
 
-	private void createStatsArray(JSONObject res) throws JSONException {
-		int i = 0;
-		stats[i] = res.getString("g");
-		i++;
-		stats[i] = res.getString("ab");
-		i++;
-		stats[i] = res.getString("r");
-		i++;
-		stats[i] = res.getString("h");
-		i++;
-		stats[i] = res.getString("d");
-		i++;
-		stats[i] = res.getString("t");
-		i++;
-		stats[i] = res.getString("hr");
-		i++;
-		stats[i] = res.getString("rbi");
-		i++;
-		stats[i] = res.getString("bb");
-		i++;
-		stats[i] = res.getString("ibb");
-		i++;
-		stats[i] = res.getString("so");
-		i++;
-		stats[i] = res.getString("sb");
-		i++;
-		stats[i] = res.getString("cs");
-		i++;
-		stats[i] = res.getString("sf");
-		i++;
-		stats[i] = res.getString("hbp");
-		i++;
-		stats[i] = res.getString("avg");
-		i++;
-		stats[i] = res.getString("obp");
-		i++;
-		stats[i] = res.getString("slg");
-		i++;
-		stats[i] = res.getString("ops");
-	}
-
-	private String findPercentage(float stat) {
-		stat = (float) (Math.round(stat * 1000.0) / 1000.0);
-		String stt = "";
-		if (stat < 1) {
-			// int div = (int) (stat / 1);
-			stt = ".";
-		}
-		stt = stt + Integer.toString((int) (stat * 1000));
-		return stt;
-	}
+	// Data Handling
 
 	private String convertDate(String date, int flag) {
 		if (date.equals("")) {
@@ -287,4 +287,14 @@ public class StatsRequest extends Request {
 
 	}
 
+	private String findPercentage(float stat) {
+		stat = (float) (Math.round(stat * 1000.0) / 1000.0);
+		String stt = "";
+		if (stat < 1) {
+			// int div = (int) (stat / 1);
+			stt = ".";
+		}
+		stt = stt + Integer.toString((int) (stat * 1000));
+		return stt;
+	}
 }

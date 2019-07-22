@@ -12,7 +12,7 @@ import mlb.api.teams.TeamsRequests;
 
 public class BattingStats extends Menu {
 
-	private static int k;
+	private static int playerNumber;
 
 	public BattingStats() {
 	}
@@ -20,34 +20,34 @@ public class BattingStats extends Menu {
 	public static boolean show(TeamsRequests team, String name) throws IOException, JSONException {
 		do {
 			textGap = "========================================================================================================================================";
-			k = 1;
+			playerNumber = 1;
 			clearConcolse();
 			System.out.println("\t\t\t\t Batting Stats\n");
 			System.out.println(name);
-			int a = 25;
-			printInfo("Name", a);
-			a = 3;
-			printInfo("Pos", a);
-			printInfo("G", a);
-			printInfo("AB", a);
-			printInfo("R", a);
-			printInfo("H", a);
-			printInfo("2B", a);
-			printInfo("3B", a);
-			printInfo("HR", a);
-			printInfo("RBI", a);
-			printInfo("BB", a);
-			printInfo("IBB", a);
-			printInfo("SO", a);
-			printInfo("SB", a);
-			printInfo("CS", a);
-			printInfo("SF", a);
-			printInfo("HBP", a);
-			a = 5;
-			printInfo("AVG", a);
-			printInfo("OBP", a);
-			printInfo("SLG", a);
-			printInfo("OPS", a);
+			int gap = 25;
+			printInfo("Name", gap);
+			gap = 3;
+			printInfo("Pos", gap);
+			printInfo("G", gap);
+			printInfo("AB", gap);
+			printInfo("R", gap);
+			printInfo("H", gap);
+			printInfo("2B", gap);
+			printInfo("3B", gap);
+			printInfo("HR", gap);
+			printInfo("RBI", gap);
+			printInfo("BB", gap);
+			printInfo("IBB", gap);
+			printInfo("SO", gap);
+			printInfo("SB", gap);
+			printInfo("CS", gap);
+			printInfo("SF", gap);
+			printInfo("HBP", gap);
+			gap = 5;
+			printInfo("AVG", gap);
+			printInfo("OBP", gap);
+			printInfo("SLG", gap);
+			printInfo("OPS", gap);
 			System.out.println("\n" + textGap);
 			int pos = 1;
 			int j = 0;
@@ -83,7 +83,7 @@ public class BattingStats extends Menu {
 			} else {
 				StatsRequest stats = null;
 				stats = new StatsRequest();
-				stats.playerCareerStats(team);
+				stats.createTeamRoster(team);
 				String[][] roster = stats.getRoster();
 				check = PlayerCareerBatingStats.show(roster[choice - 1][0], roster[choice - 1][1], stats);
 			}
@@ -138,24 +138,24 @@ public class BattingStats extends Menu {
 		for (int i = 0; i < playersInPosition; i++) {
 			String name = array[i][0];
 			String player_id = array[i][1];
-			stats.getStatsromAPI("R", season, player_id, 1);
-			stats.storeStats(false, 0);
+			stats.getBattingStatsromAPI("R", season, player_id, 1);
+			stats.storeBattingStats(false, 0);
 			if (pos == 12) {
 				System.out.println(textGap);
 				pos = 11;
 			}
-			int a = 25;
-			printInfo(Integer.toString(k) + "." + name, a);
-			a = 3;
-			printInfo(position, a);
+			int gap = 25;
+			printInfo(Integer.toString(playerNumber) + "." + name, gap);
+			gap = 3;
+			printInfo(position, gap);
 			String[] hittingStats = stats.getStats();
 			for (int j = 0; j < GeneralInfo.battingStats; j++) {
-				printInfo(hittingStats[j], a);
+				printInfo(hittingStats[j], gap);
 				if (j == 14) {
-					a = 5;
+					gap = 5;
 				}
 			}
-			k++;
+			playerNumber++;
 			System.out.println();
 		}
 		pos++;
