@@ -1,4 +1,4 @@
-package mlb.api.players_stats;
+package mlb.api.players_batting_stats;
 
 import java.io.IOException;
 
@@ -9,26 +9,20 @@ import mlb.GeneralInfo;
 import mlb.api.Request;
 import mlb.api.teams.TeamsRequests;
 
-public class StatsRequest extends Request {
+public class BattingStatsRequest extends Request {
 
 	private String[] battingStats;
-	private StringBuffer response;
-	private PlayerStatsURI playerStats;
+	private PlayerBattingStatsURI playerStats;
 	private String[][] roster;
-	private int debutYear;
-	private int endYear;
 	private int size;
 	private String team;
 	private int teamsPlayed;
 	private int flag;
 
-	public StatsRequest() {
-		playerStats = new PlayerStatsURI();
-		response = null;
+	public BattingStatsRequest() {
+		playerStats = new PlayerBattingStatsURI();
 		roster = null;
 		size = 0;
-		debutYear = 0;
-		endYear = 0;
 		flag = 0;
 		teamsPlayed = 0;
 		team = "";
@@ -42,14 +36,6 @@ public class StatsRequest extends Request {
 
 	public String[][] getRoster() {
 		return roster;
-	}
-
-	public int getDebutYear() {
-		return debutYear;
-	}
-
-	public int getEndYear() {
-		return endYear;
 	}
 
 	public String getTeam() {
@@ -90,7 +76,7 @@ public class StatsRequest extends Request {
 
 	public void getBattingStatsromAPI(String game_type, String season, String player_id, int flag) throws IOException {
 		String url = playerStats.requestBattingStatsURL(game_type, season, player_id, flag);
-		response = requestDataFromMLB(url);
+		requestDataFromMLB(url);
 		if (flag == 2) {
 			this.flag = flag;
 		}
@@ -98,7 +84,7 @@ public class StatsRequest extends Request {
 
 	public void getCarrertHittingStatsFromAPI(String game_type, String player_id, int flag) throws IOException {
 		String url = playerStats.requestCareerStatsURL(game_type, player_id, flag);
-		response = requestDataFromMLB(url);
+		requestDataFromMLB(url);
 	}
 
 	public void storeBattingStats(boolean flag2, int index) throws JSONException {
@@ -108,10 +94,10 @@ public class StatsRequest extends Request {
 		try {
 			res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults");
 			teamsPlayed = Integer.parseInt(res.getString("totalSize"));
-			if (teamsPlayed <= 1 && flag2 == false) {
+			if (teamsPlayed <= 1 && !flag2) {
 				res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONObject("row");
 				createBattingStatsArray(res);
-			} else if (flag2 == false) {
+			} else if (!flag2) {
 				int temp[] = new int[GeneralInfo.battingStats];
 				for (int j = 0; j < teamsPlayed; j++) {
 					res = myResponse.getJSONObject("sport_hitting_tm").getJSONObject("queryResults").getJSONArray("row")
@@ -203,88 +189,6 @@ public class StatsRequest extends Request {
 		battingStats[i] = res.getString("slg");
 		i++;
 		battingStats[i] = res.getString("ops");
-	}
-
-	// Player Info
-
-	public void getInfoFromApi(String player_id, int flag) throws IOException {
-		String url = playerStats.requestInfoURL(player_id, 1);
-		response = requestDataFromMLB(url);
-	}
-
-	public String[] getPlayerInfo() throws JSONException {
-		String[] info = new String[GeneralInfo.playerInfo];
-		JSONObject myResponse = new JSONObject(response.toString());
-		JSONObject res = null;
-		try {
-			res = myResponse.getJSONObject("player_info").getJSONObject("queryResults").getJSONObject("row");
-			int i = 0;
-			info[i] = res.getString("birth_country");
-			i++;
-			String birthDate = res.getString("birth_date");
-			info[i] = convertDate(birthDate, 0);
-			i++;
-			info[i] = res.getString("age");
-			i++;
-			String inch = res.getString("height_inches");
-			String feets = res.getString("height_feet");
-			info[i] = feetsToMeters(feets, inch);
-			i++;
-			String weight = res.getString("weight");
-			info[i] = poundsToKillos(weight);
-			i++;
-			info[i] = res.getString("primary_position_txt");
-			i++;
-			info[i] = res.getString("throws");
-			i++;
-			info[i] = res.getString("bats");
-			i++;
-			String debut = res.getString("pro_debut_date");
-			info[i] = convertDate(debut, 1);
-			i++;
-			String end = res.getString("end_date");
-			info[i] = convertDate(end, 2);
-		} catch (JSONException e) {
-			for (int i = 0; i < GeneralInfo.playerInfo; i++) {
-				info[i] = "-";
-			}
-		}
-		return info;
-	}
-
-	// Data Handling
-
-	private String convertDate(String date, int flag) {
-		if (date.equals("")) {
-			return "-";
-
-		}
-		String year = date.substring(0, 4);
-		String month = date.substring(5, 7);
-		String Date = date.substring(8, 10);
-		if (flag == 1) {
-			debutYear = Integer.parseInt(year);
-		} else if (flag == 2) {
-			endYear = Integer.parseInt(year);
-		}
-		return Date + "/" + month + "/" + year;
-	}
-
-	private String feetsToMeters(String feets, String inch) {
-		float feet = Float.parseFloat(feets);
-		double meters = (float) (feet * 0.305);
-		float inc = Float.parseFloat(inch);
-		meters = meters + inc * 0.0254;
-		meters = Math.round(meters * 100.0) / 100.0;
-		return Double.toString(meters);
-	}
-
-	private String poundsToKillos(String pounds) {
-		float pound = Float.parseFloat(pounds);
-		float kg = (float) (pound * 0.45359237);
-		int killos = Math.round(kg);
-		return Integer.toString(killos) + " kg";
-
 	}
 
 	private String findPercentage(float stat) {

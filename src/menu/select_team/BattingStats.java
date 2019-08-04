@@ -7,7 +7,7 @@ import org.json.JSONException;
 
 import menu.Menu;
 import mlb.GeneralInfo;
-import mlb.api.players_stats.StatsRequest;
+import mlb.api.players_batting_stats.BattingStatsRequest;
 import mlb.api.teams.TeamsRequests;
 
 public class BattingStats extends Menu {
@@ -81,8 +81,8 @@ public class BattingStats extends Menu {
 			} else if (choice == team.getTeamSize() + 1) {
 				return true;
 			} else {
-				StatsRequest stats = null;
-				stats = new StatsRequest();
+				BattingStatsRequest stats = null;
+				stats = new BattingStatsRequest();
 				stats.createTeamRoster(team);
 				String[][] roster = stats.getRoster();
 				check = PlayerCareerBatingStats.show(roster[choice - 1][0], roster[choice - 1][1], stats);
@@ -94,8 +94,8 @@ public class BattingStats extends Menu {
 
 	private static int pritnPlayersStats(String[][] array, int playersInPosition, int pos)
 			throws IOException, JSONException {
-		StatsRequest stats = null;
-		stats = new StatsRequest();
+		BattingStatsRequest stats = null;
+		stats = new BattingStatsRequest();
 		int year = Calendar.getInstance().get(Calendar.YEAR); // Get Current Year
 		String season = Integer.toString(year); // Default icurrent year
 		String position = "";

@@ -7,17 +7,19 @@ import org.json.JSONException;
 
 import menu.Menu;
 import mlb.GeneralInfo;
-import mlb.api.players_stats.StatsRequest;
+import mlb.api.players_batting_stats.BattingStatsRequest;
+import mlb.api.players_info.PlayerInfoRequest;
 
 public class PlayerCareerBatingStats extends Menu {
 
-	public static boolean show(String name, String player_id, StatsRequest stats) throws IOException, JSONException {
+	public static boolean show(String name, String player_id, BattingStatsRequest stats) throws IOException, JSONException {
 		do {
 			clearConcolse();
 			textGap = "\n======================================================================================================================";
 			int gap;
-			stats.getInfoFromApi(player_id, 1);
-			String[] info = stats.getPlayerInfo();
+			PlayerInfoRequest playerInfo = new PlayerInfoRequest();
+			playerInfo.getInfoFromApi(player_id, 1);
+			String[] info = playerInfo.getPlayerInfo();
 			gap = 15;
 			printPlayerInfo("Name:", name, gap);
 			int i = 0;
@@ -67,7 +69,7 @@ public class PlayerCareerBatingStats extends Menu {
 			printInfo("SLG", gap);
 			printInfo("OPS", gap);
 			System.out.println(textGap);
-			printPlayerCarrerHittingStats(stats, player_id);
+			printPlayerCarrerHittingStats(stats, playerInfo, player_id);
 			System.out.println(1 + "." + "Back");
 			System.out.println(0 + "." + "Exit");
 			int choice = getUserInput(0, 1);
@@ -80,12 +82,12 @@ public class PlayerCareerBatingStats extends Menu {
 		return true;
 	}
 
-	private static void printPlayerCarrerHittingStats(StatsRequest stats, String player_id)
-			throws IOException, JSONException {
-		int debut = stats.getDebutYear();
+	private static void printPlayerCarrerHittingStats(BattingStatsRequest stats, PlayerInfoRequest playerInfo,
+			String player_id) throws IOException, JSONException {
+		int debut = playerInfo.getDebutYear();
 		int season = Calendar.getInstance().get(Calendar.YEAR);
-		if (stats.getEndYear() != 0) {
-			season = stats.getEndYear();
+		if (playerInfo.getEndYear() != 0) {
+			season = playerInfo.getEndYear();
 		} else if (debut == 0) {
 			System.out.println("\t\t\t\tNo proffesional games");
 			season = -1;

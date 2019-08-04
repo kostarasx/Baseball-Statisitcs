@@ -33,7 +33,7 @@ public class TeamsURILinks extends URILinks {
 		all_star_sw = "";
 		sort_order = "";
 		int year = Calendar.getInstance().get(Calendar.YEAR); // Get Current Year
-		season = Integer.toString(year); // Default icurrent year
+		season = Integer.toString(year); // Default current year
 		team_Id = "";
 	}
 

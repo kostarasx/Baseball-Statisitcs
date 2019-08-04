@@ -8,11 +8,13 @@ import java.net.URL;
 
 public class Request {
 
+	protected StringBuffer response;
+
 	/*
 	 * Request data from MLB API base of url
 	 */
-	protected StringBuffer requestDataFromMLB(String url) throws IOException {
-		StringBuffer response = new StringBuffer();
+	protected void requestDataFromMLB(String url) throws IOException {
+		response = new StringBuffer();
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
@@ -27,7 +29,7 @@ public class Request {
 			System.out.println("Error getting data!");
 			response = null;
 		}
-		return response;
+
 	}
 
 }

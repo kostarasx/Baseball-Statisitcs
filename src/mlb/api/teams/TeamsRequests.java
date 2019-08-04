@@ -27,7 +27,6 @@ public class TeamsRequests extends Request {
 	private String[][] designHitterPlayers;
 	private String[][] ofPlayers;
 	private int[] numberInPotition;
-	private StringBuffer response;
 	private TeamsURILinks teamURI;
 
 	public TeamsRequests() {
@@ -131,7 +130,7 @@ public class TeamsRequests extends Request {
 
 	public void getTeamsFromAPI(String all_star_sw, String sort_order, String season, int flag) throws IOException {
 		String url = teamURI.requesTeamURL(all_star_sw, sort_order, season, flag);
-		response = requestDataFromMLB(url);
+		requestDataFromMLB(url);
 	}
 
 	// Seperate Teams base of Division AL or NL
@@ -160,7 +159,7 @@ public class TeamsRequests extends Request {
 
 	public void getRosterFromAPI(String team_id) throws IOException {
 		String url = teamURI.requestRosterURI(team_id, 1);
-		response = requestDataFromMLB(url);
+		requestDataFromMLB(url);
 	}
 
 	public void seperatePlayers() throws JSONException {
